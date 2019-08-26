@@ -1,0 +1,16 @@
+os_dbg.pbi: \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\uCOS-III\Source\os_dbg.c \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\uCOS-III\Source\os.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\CFG\os_cfg.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\..\..\..\..\uC-CPU\ARM-Cortex-M3\IAR\cpu.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\..\..\..\..\uC-CPU\cpu_def.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\CFG\cpu_cfg.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\..\..\..\..\uC-CPU\cpu_core.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\..\..\..\..\uC-LIB\lib_def.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\..\..\..\..\uC-LIB\lib_mem.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\app_cfg.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\CFG\lib_cfg.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\..\..\..\..\uC-LIB\lib_str.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\..\..\..\..\uC-LIB\lib_ascii.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\uCOS-III\Source\os_type.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\..\..\..\..\uCOS-III\Ports\ARM-Cortex-M3\Generic\IAR\os_cpu.h

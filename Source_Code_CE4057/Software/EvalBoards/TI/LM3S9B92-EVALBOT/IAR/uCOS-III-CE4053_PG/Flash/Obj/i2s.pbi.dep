@@ -1,0 +1,9 @@
+i2s.pbi: \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\CPU\LuminaryMicro\DriverLib\driverlib\i2s.c \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\..\..\..\..\CPU\LuminaryMicro\DriverLib\inc/hw_i2s.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\..\..\..\..\CPU\LuminaryMicro\DriverLib\inc/hw_ints.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\..\..\..\..\CPU\LuminaryMicro\DriverLib\inc/hw_memmap.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\..\..\..\..\CPU\LuminaryMicro\DriverLib\inc/hw_types.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\..\..\..\..\CPU\LuminaryMicro\DriverLib\driverlib/debug.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\..\..\..\..\CPU\LuminaryMicro\DriverLib\driverlib/i2s.h \
+  C:\Users\rboui\Desktop\COURSES\ NTU\CE4057\ TCC\CE4057-\Source_Code_CE4057\Software\EvalBoards\TI\LM3S9B92-EVALBOT\IAR\uCOS-III-CE4053_PG\..\..\..\..\..\CPU\LuminaryMicro\DriverLib\driverlib/interrupt.h
