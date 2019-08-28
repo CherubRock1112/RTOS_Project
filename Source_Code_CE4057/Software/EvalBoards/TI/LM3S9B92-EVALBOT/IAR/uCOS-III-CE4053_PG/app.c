@@ -65,13 +65,13 @@
 
 static  OS_TCB       AppTaskStartTCB;
 static  CPU_STK      AppTaskStartStk[APP_TASK_START_STK_SIZE];
-
+/*
 static  OS_TCB       AppTaskOneTCB;
 static  CPU_STK      AppTaskOneStk[APP_TASK_ONE_STK_SIZE];
 
 static  OS_TCB       AppTaskTwoTCB;
 static  CPU_STK      AppTaskTwoStk[APP_TASK_TWO_STK_SIZE];
-
+*/
 static  OS_TCB       AppTaskBlinkTCB;
 static  CPU_STK      AppTaskBlinkStk[APP_TASK_BLINK_STK_SIZE];
 
@@ -111,7 +111,11 @@ static  void        AppRobotMotorDriveSensorEnable    ();
 static  void        AppTaskStart                 (void  *p_arg);
 static  void        AppTaskOne                   (void  *p_arg);
 static  void        AppTaskTwo                   (void  *p_arg);
-
+static  void        AppTaskBlink                 (void  *p_arg);
+static  void        AppTaskFW                    (void  *p_arg);
+static  void        AppTaskBW                    (void  *p_arg);
+static  void        AppTaskLeftTurn              (void  *p_arg);
+static  void        AppTaskRightTurn             (void  *p_arg);
 
 /*
 *********************************************************************************************************
@@ -184,7 +188,7 @@ static  void  AppTaskStart (void  *p_arg)
     
     /* Initialise the 2 Main Tasks to  Deleted State */
 
-    OSTaskCreate((OS_TCB     *)&AppTaskOneTCB, //TCB
+   /* OSTaskCreate((OS_TCB     *)&AppTaskOneTCB, //TCB
                  (CPU_CHAR   *)"App Task One", //TASK NAME
                  (OS_TASK_PTR ) AppTaskOne, //TASK FCT
                  (void       *) 0, //TASK ARGUMENTS
@@ -210,7 +214,7 @@ static  void  AppTaskStart (void  *p_arg)
                  (OS_TICK     ) 0u, 
                  (void       *) (CPU_INT32U) 2, 
                  (OS_OPT      )(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), 
-                 (OS_ERR     *)&err);
+                 (OS_ERR     *)&err);*/
 
     OSTaskCreate((OS_TCB     *)&AppTaskBlinkTCB, 
                  (CPU_CHAR   *)"App Task Blink", 
@@ -253,7 +257,7 @@ static  void  AppTaskStart (void  *p_arg)
                  (void       *) (CPU_INT32U) 2, 
                  (OS_OPT      )(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), 
                  (OS_ERR     *)&err);
-
+/*
     OSTaskCreate((OS_TCB     *)&AppTaskLeftTurnTCB, 
                  (CPU_CHAR   *)"App Task Left Turn", 
                  (OS_TASK_PTR ) AppTaskLeftTurn, 
@@ -280,14 +284,14 @@ static  void  AppTaskStart (void  *p_arg)
                  (OS_TICK     ) 0u, 
                  (void       *) (CPU_INT32U) 2, 
                  (OS_OPT      )(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), 
-                 (OS_ERR     *)&err);
+                 (OS_ERR     *)&err);*/
 
     
     /* Delete this task */
     OSTaskDel((OS_TCB *)0, &err);
     
 }
-
+/*
 //MOVEMENT
 static  void  AppTaskOne (void  *p_arg)
 { 
@@ -350,7 +354,102 @@ static  void  AppTaskTwo (void  *p_arg)
     BSP_LED_Off(0u);
    //OSTaskDel((OS_TCB *)0, &err); //Task created and ran once, want to make them periodic
 
+}*/
+
+static  void  AppTaskBlink (void  *p_arg)
+{ 
+    OS_ERR      err;
+    CPU_INT32U  i,k,j=0;
+   
+    while(1){
+      OSTimeDly((OS_TICK) APP_TASK_BLINK_DLY,
+                (OS_OPT)OS_OPT_TIME_DLY,
+                (OS_ERR *) &err);
+      
+      for(i=0; i <(ONESECONDTICK); i++)
+      {
+        j = ((i * 2) + j);
+      }
+    
+      BSP_LED_Off(0u);
+      for(k=0; k<2; k++)
+      {
+        BSP_LED_Toggle(0u);
+        for(i=0; i <ONESECONDTICK/3; i++)
+          j = ((i * 2)+j);
+      }
+      BSP_LED_Off(0u);
+    }
+
 }
+
+static  void  AppTaskFW (void  *p_arg)
+{   
+  OS_ERR      err;
+  CPU_INT32U  k, i, j;
+  
+  while(1){
+      OSTimeDly((OS_TICK) APP_TASK_FW_DLY,
+                (OS_OPT)OS_OPT_TIME_DLY,
+                (OS_ERR *) &err);
+        
+      RoboTurn(FRONT, 16, 50);
+    
+      for(i=0; i <ONESECONDTICK; i++);
+      RoboTurn(STOP, 16, 50);
+
+    }
+}
+
+static  void  AppTaskBW (void  *p_arg)
+{   
+  OS_ERR      err;
+  CPU_INT32U  k, i, j;
+  
+  while(1){
+      OSTimeDly((OS_TICK) APP_TASK_BW_DLY,
+                (OS_OPT)OS_OPT_TIME_DLY,
+                (OS_ERR *) &err);
+        
+      RoboTurn(BACK, 16, 50);
+    
+      for(i=0; i <ONESECONDTICK; i++);
+      RoboTurn(STOP, 16, 50);
+
+    }
+}
+
+static  void  AppTaskLeftTurn (void  *p_arg)
+{
+  OS_ERR      err;
+  CPU_INT32U  k, i, j;
+  while(1){
+    OSTimeDly((OS_TICK) APP_TASK_LEFT_TURN_DLY,
+                (OS_OPT)OS_OPT_TIME_DLY,
+                (OS_ERR *) &err);
+    RoboTurn(LEFT_SIDE, 16, 50);
+    for(i=0; i <1.6*ONESECONDTICK; i++);
+    RoboTurn(STOP, 16, 50);
+    OSTaskDel((OS_TCB *)0, &err);  
+  }
+}
+
+static  void  AppTaskRightTurn (void  *p_arg)
+{   
+  OS_ERR      err;
+  CPU_INT32U  k, i, j;
+  while(1){
+    OSTimeDly((OS_TICK) APP_TASK_RIGHT_TURN_DLY,
+                (OS_OPT)OS_OPT_TIME_DLY,
+                (OS_ERR *) &err);
+    RoboTurn(RIGHT_SIDE, 16, 50);
+    for(i=0; i <1.6*ONESECONDTICK; i++);
+    RoboTurn(STOP, 16, 50);
+    OSTaskDel((OS_TCB *)0, &err);  
+  }
+}
+
+
 
 static  void  AppRobotMotorDriveSensorEnable ()
 {
@@ -425,7 +524,7 @@ void RoboTurn(tSide dir, CPU_INT16U seg, CPU_INT16U speed)
 
   switch(dir)
   {
-            case FRONT :
+            case FRONT : 
                     BSP_MotorDir(RIGHT_SIDE,FORWARD);
                     BSP_MotorDir(LEFT_SIDE,FORWARD);
                     BSP_MotorRun(LEFT_SIDE);
@@ -453,7 +552,7 @@ void RoboTurn(tSide dir, CPU_INT16U seg, CPU_INT16U speed)
                     BSP_MotorRun(LEFT_SIDE);
                     break;
                     
-            default:
+            case STOP:
                     BSP_MotorStop(LEFT_SIDE);
                     BSP_MotorStop(RIGHT_SIDE);
                     break;

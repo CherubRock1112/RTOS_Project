@@ -51,11 +51,11 @@
 
 #define  APP_TASK_ONE_PRIO                              2u
 #define  APP_TASK_TWO_PRIO                              3u
-#define  APP_TASK_BLINK_PRIO
-#define  APP_TASK_FW_PRIO
-#define  APP_TASK_BW_PRIO
-#define  APP_TASK_LEFT_TURN_PRIO
-#define  APP_TASK_RIGHT_TURN_PRIO
+#define  APP_TASK_BLINK_PRIO                            2u
+#define  APP_TASK_FW_PRIO								3u
+#define  APP_TASK_BW_PRIO								4u
+#define  APP_TASK_LEFT_TURN_PRIO						5u
+#define  APP_TASK_RIGHT_TURN_PRIO						6u
 
 /*
 *********************************************************************************************************
@@ -67,11 +67,11 @@
 #define  APP_TASK_START_STK_SIZE                    128u
 #define  APP_TASK_ONE_STK_SIZE                      128u
 #define  APP_TASK_TWO_STK_SIZE                      128u
-#define  APP_TASK_BLINK_STK_SIZE
-#define  APP_TASK_FW_STK_SIZE
-#define  APP_TASK_BW_STK_SIZE
-#define  APP_TASK_LEFT_TURN_STK_SIZE
-#define  APP_TASK_RIGHT_TURN_STK_SIZE
+#define  APP_TASK_BLINK_STK_SIZE                    128u
+#define  APP_TASK_FW_STK_SIZE						128u
+#define  APP_TASK_BW_STK_SIZE						128u
+#define  APP_TASK_LEFT_TURN_STK_SIZE				128u
+#define  APP_TASK_RIGHT_TURN_STK_SIZE				128u
 
 /*
 *********************************************************************************************************
@@ -80,13 +80,11 @@
 *********************************************************************************************************
 */
 
-#define APP_TASK_ONE_DLY
-#define APP_TASK_TWO_DLY
-#define APP_TASK_BLINK_DLY
-#define APP_TASK_FW_DLY
-#define APP_TASK_BW_DLY
-#define APP_TASK_LEFT_TURN_DLY
-#define APP_TASK_RIGHT_TURN_DLY
+#define APP_TASK_BLINK_DLY	5000
+#define APP_TASK_FW_DLY		10000
+#define APP_TASK_BW_DLY		17000
+#define APP_TASK_LEFT_TURN_DLY	25000
+#define APP_TASK_RIGHT_TURN_DLY	47000
 
 /*
 *********************************************************************************************************

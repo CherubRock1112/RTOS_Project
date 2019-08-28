@@ -104,7 +104,8 @@ typedef  enum {
     LEFT_SIDE = 0,
     RIGHT_SIDE,
     FRONT,
-    BACK
+    BACK,
+    STOP
 } tSide;
 
                                                                 /* tSide must be defined before reading in the ...      */
