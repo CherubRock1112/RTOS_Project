@@ -230,7 +230,7 @@ CPU_STK  *OSTaskStkInit (OS_TASK_PTR    p_task,
 
     (void)opt;                                              /* Prevent compiler warning                               */
 
-    p_stk = &p_stk_base[stk_size];                          /* Load stack pointer                                     */
+    p_stk = &p_stk_base[stk_size];                       /* Load stack pointer                                     */
                                                             /* Registers stacked as if auto-saved on exception        */
     *--p_stk = (CPU_STK)0x01000000u;                        /* xPSR                                                   */
     *--p_stk = (CPU_STK)p_task;                             /* Entry Point                                            */
@@ -249,7 +249,7 @@ CPU_STK  *OSTaskStkInit (OS_TASK_PTR    p_task,
     *--p_stk = (CPU_STK)0x06060606u;                        /* R6                                                     */
     *--p_stk = (CPU_STK)0x05050505u;                        /* R5                                                     */
     *--p_stk = (CPU_STK)0x04040404u;                        /* R4                                                     */
-
+    //FAIRE DEBUG SUR P_STK, RETURN PAS CORRECTEMENT
     return (p_stk);
 }
 

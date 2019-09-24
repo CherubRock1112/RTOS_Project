@@ -21,7 +21,7 @@
         <StopOnThrow>_ 0</StopOnThrow>
     </Exceptions>
     <DebugChecksum>
-        <Checksum>2965792361</Checksum>
+        <Checksum>1029871627</Checksum>
     </DebugChecksum>
     <CallStack>
         <ShowArgs>0</ShowArgs>
@@ -29,10 +29,6 @@
     <Disassembly>
         <MixedMode>1</MixedMode>
     </Disassembly>
-    <struct_types>
-        <Fmt0>OS_TCB-PendStatus	3	0</Fmt0>
-        <Fmt1>OS_TCB-Prio	3	0</Fmt1>
-    </struct_types>
     <Log_file>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
@@ -48,6 +44,22 @@
     <Disassemble_mode>
         <mode>0</mode>
     </Disassemble_mode>
+    <struct_types>
+        <Fmt0>OS_TCB-PendStatus	3	0</Fmt0>
+        <Fmt1>OS_TCB-Prio	3	0</Fmt1>
+    </struct_types>
+    <DisassembleMode>
+        <mode>0</mode>
+    </DisassembleMode>
+    <Breakpoints>
+        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\app.c}.179.5" 0 0 0 0 "" 0 ""</Bp0>
+        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\app.c}.188.5" 0 0 0 0 "" 0 ""</Bp1>
+        <Bp2>_ "STD_CODE" "{$PROJ_DIR$\app.c}.179.5" 0 0 0 0 "" 0 ""</Bp2>
+        <Bp3>_ "STD_CODE" "{C:\Users\ankita003\Documents\CE4053\ce4053\Micrium\Software\uCOS-III\Source\os_mutex.c}.827.5" 0 0 0 0 "" 0 ""</Bp3>
+        <Bp4>_ "STD_CODE" "{C:\Users\ankita003\Documents\CE4053\ce4053\Micrium\Software\uCOS-III\Source\os_task.c}.341.5" 0 0 0 0 "" 0 ""</Bp4>
+        <Bp5>_ "STD_CODE" "{C:\Users\ankita003\Documents\CE4053\ce4053\Micrium\Software\uCOS-III\Source\os_mutex.c}.407.9" 0 0 0 0 "" 0 ""</Bp5>
+        <Count>6</Count>
+    </Breakpoints>
     <TermIOLog>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
@@ -57,28 +69,18 @@
         <LogFile>_ ""</LogFile>
         <Category>_ 0</Category>
     </LogFile>
+    <Aliases>
+        <A0>_ "C:\Users\ankita003\Documents\CE4053\ce4053\Micrium\Software\CPU\LuminaryMicro\DriverLib\driverlib\gpio.c" ""</A0>
+        <A1>_ "C:\Users\ankita003\Documents\CE4053\ce4053\Micrium\Software\CPU\LuminaryMicro\DriverLib\driverlib\pwm.c" ""</A1>
+        <A2>_ "C:\Users\ankita003\Documents\CE4053\ce4053\Micrium\Software\CPU\LuminaryMicro\DriverLib\driverlib\sysctl.c" ""</A2>
+        <A3>_ "C:\Users\ankita003\Documents\CE4053\ce4053\Micrium\Software\uC-CPU\ARM-Cortex-M3\IAR\cpu_a.asm" ""</A3>
+        <Count>4</Count>
+        <SuppressDialog>0</SuppressDialog>
+    </Aliases>
     <CallStackLog>
         <Enabled>0</Enabled>
     </CallStackLog>
     <CallStackStripe>
         <ShowTiming>1</ShowTiming>
     </CallStackStripe>
-    <DisassembleMode>
-        <mode>0</mode>
-    </DisassembleMode>
-    <Breakpoints>
-        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\app.c}.178.5" 0 0 0 0 "" 0 ""</Bp0>
-        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\app.c}.291.5" 0 0 0 0 "" 0 ""</Bp1>
-        <Bp2>_ "STD_CODE" "{$PROJ_DIR$\app.c}.219.5" 0 0 0 0 "" 0 ""</Bp2>
-        <Bp3>_ "STD_CODE" "{C:\Users\ankita003\Documents\CE4053\ce4053\Micrium\Software\uCOS-III\Source\os_mutex.c}.827.5" 0 0 0 0 "" 0 ""</Bp3>
-        <Bp4>_ "STD_CODE" "{C:\Users\ankita003\Documents\CE4053\ce4053\Micrium\Software\uCOS-III\Source\os_task.c}.341.5" 0 0 0 0 "" 0 ""</Bp4>
-        <Bp5>_ "STD_CODE" "{C:\Users\ankita003\Documents\CE4053\ce4053\Micrium\Software\uCOS-III\Source\os_mutex.c}.407.9" 0 0 0 0 "" 0 ""</Bp5>
-        <Count>6</Count>
-    </Breakpoints>
-    <Aliases>
-        <A0>_ "C:\Users\ankita003\Documents\CE4053\ce4053\Micrium\Software\CPU\LuminaryMicro\DriverLib\driverlib\gpio.c" ""</A0>
-        <A1>_ "C:\Users\ankita003\Documents\CE4053\ce4053\Micrium\Software\CPU\LuminaryMicro\DriverLib\driverlib\pwm.c" ""</A1>
-        <Count>2</Count>
-        <SuppressDialog>0</SuppressDialog>
-    </Aliases>
 </settings>

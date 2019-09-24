@@ -2037,15 +2037,22 @@ void  OS_RdyListInit (void)
 * Note(s)    : This function is INTERNAL to uC/OS-III and your application should not call it.
 ************************************************************************************************************************
 */
-
+extern int isNew;
 void  OS_RdyListInsert (OS_TCB *p_tcb)
 {
+    // if (isNew)
+    //     fprintf(stdout, "%s %s\n", "RDYLST INSERT OF ", p_tcb->NamePtr);
     OS_PrioInsert(p_tcb->Prio);
     if (p_tcb->Prio == OSPrioCur) {                         /* Are we readying a task at the same prio?               */
         OS_RdyListInsertTail(p_tcb);                        /* Yes, insert readied task at the end of the list        */
     } else {
         OS_RdyListInsertHead(p_tcb);                        /* No,  insert readied task at the beginning of the list  */
     }
+    // if (isNew){
+    //     fprintf(stdout, "%s\n", "END OF INSERTION");
+    //     isNew = 0;
+    // }
+    OSSched();
 }
 
 
@@ -2111,9 +2118,9 @@ void  OS_RdyListInsertHead (OS_TCB  *p_tcb)
     OS_TCB       *p_tcb2;
 
 
-
     p_rdy_list = &OSRdyList[p_tcb->Prio];
     if (p_rdy_list->NbrEntries == (OS_OBJ_QTY)0) {          /* CASE 0: Insert when there are no entries               */
+        //fprintf(stdout, "%s\n", "INSERTION AT HEAD OF READY LIST NO ENTRIES");
         p_rdy_list->NbrEntries =  (OS_OBJ_QTY)1;            /*         This is the first entry                        */
         p_tcb->NextPtr         =  (OS_TCB   *)0;            /*         No other OS_TCBs in the list                   */
         p_tcb->PrevPtr         =  (OS_TCB   *)0;

@@ -64,7 +64,7 @@
 *********************************************************************************************************
 */
 
-#define  APP_TASK_START_STK_SIZE                    128u
+#define  APP_TASK_START_STK_SIZE                    256u
 #define  APP_TASK_ONE_STK_SIZE                      128u
 #define  APP_TASK_TWO_STK_SIZE                      128u
 #define  APP_TASK_BLINK_STK_SIZE                    128u
@@ -80,11 +80,11 @@
 *********************************************************************************************************
 */
 
-#define APP_TASK_BLINK_DLY	5000
-#define APP_TASK_FW_DLY		10000
-#define APP_TASK_BW_DLY		17000
-#define APP_TASK_LEFT_TURN_DLY	25000
-#define APP_TASK_RIGHT_TURN_DLY	47000
+#define APP_TASK_BLINK_DLY	50
+#define APP_TASK_FW_DLY		100
+#define APP_TASK_BW_DLY		170
+#define APP_TASK_LEFT_TURN_DLY	250
+#define APP_TASK_RIGHT_TURN_DLY	470
 
 /*
 *********************************************************************************************************
