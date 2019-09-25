@@ -49,13 +49,13 @@
 #define  APP_TASK_REPEAT_TWO_PRIO                       3u
 
 
-#define  APP_TASK_ONE_PRIO                              2u
-#define  APP_TASK_TWO_PRIO                              3u
-#define  APP_TASK_BLINK_PRIO                            2u
-#define  APP_TASK_FW_PRIO								3u
-#define  APP_TASK_BW_PRIO								4u
-#define  APP_TASK_LEFT_TURN_PRIO						5u
-#define  APP_TASK_RIGHT_TURN_PRIO						6u
+#define  APP_TASK_ONE_PRIO                              10u
+#define  APP_TASK_TWO_PRIO                              10u
+#define  APP_TASK_BLINK_PRIO                            10u
+#define  APP_TASK_FW_PRIO								10u
+#define  APP_TASK_BW_PRIO								10u
+#define  APP_TASK_LEFT_TURN_PRIO						10u
+#define  APP_TASK_RIGHT_TURN_PRIO						10u
 
 /*
 *********************************************************************************************************
@@ -80,11 +80,11 @@
 *********************************************************************************************************
 */
 
-#define APP_TASK_BLINK_DLY	50
-#define APP_TASK_FW_DLY		100
-#define APP_TASK_BW_DLY		170
-#define APP_TASK_LEFT_TURN_DLY	250
-#define APP_TASK_RIGHT_TURN_DLY	470
+#define APP_TASK_BLINK_DLY	50u
+#define APP_TASK_FW_DLY		100u
+#define APP_TASK_BW_DLY		170u
+#define APP_TASK_LEFT_TURN_DLY	250u
+#define APP_TASK_RIGHT_TURN_DLY	470u
 
 /*
 *********************************************************************************************************

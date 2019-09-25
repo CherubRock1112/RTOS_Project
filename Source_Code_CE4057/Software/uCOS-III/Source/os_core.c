@@ -2040,18 +2040,18 @@ void  OS_RdyListInit (void)
 extern int isNew;
 void  OS_RdyListInsert (OS_TCB *p_tcb)
 {
-    // if (isNew)
-    //     fprintf(stdout, "%s %s\n", "RDYLST INSERT OF ", p_tcb->NamePtr);
+    //  if (isNew)
+    //      fprintf(stdout, "%s %s\n", "RDYLST INSERT OF ", p_tcb->NamePtr);
     OS_PrioInsert(p_tcb->Prio);
     if (p_tcb->Prio == OSPrioCur) {                         /* Are we readying a task at the same prio?               */
         OS_RdyListInsertTail(p_tcb);                        /* Yes, insert readied task at the end of the list        */
     } else {
         OS_RdyListInsertHead(p_tcb);                        /* No,  insert readied task at the beginning of the list  */
     }
-    // if (isNew){
-    //     fprintf(stdout, "%s\n", "END OF INSERTION");
-    //     isNew = 0;
-    // }
+    //  if (isNew){
+    //      fprintf(stdout, "%s\n", "END OF INSERTION");
+    //      isNew = 0;
+    //  }
     OSSched();
 }
 

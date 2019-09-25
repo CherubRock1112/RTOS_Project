@@ -604,12 +604,12 @@ void OS_SkipListInsert(OS_TCB *newElem)
 
     if (head.firstTCB == NULL_TCB)
     { //First node
-        fprintf(stdout, "FIRST INSERTION\n");
+        //fprintf(stdout, "FIRST INSERTION\n");
         head.firstTCB = newElem;
     }
     else if (newElem->Prio < head.firstTCB->TickRemain)
     { //Node to be added is the smallest of the list
-        fprintf(stdout, "INSERTION AT HEAD (%d)\n", lvl);
+        //fprintf(stdout, "INSERTION AT HEAD (%d)\n", lvl);
         for (i = 0; i < SKIP_LIST_MAX_LVL; i++)
         {
             if (i > lvl)
@@ -639,13 +639,13 @@ void OS_SkipListInsert(OS_TCB *newElem)
             {
                 if (currentTCB == NULL_TCB)
                 { //Adding a node at the end of a level
-                    fprintf(stdout, "INSERTION AT END OF LEVEL %d\n", i);
+                    //fprintf(stdout, "INSERTION AT END OF LEVEL %d\n", i);
                     lastTCB->NextTCB[i] = newElem;
                     currentTCB = lastTCB;
                 }
                 else
                 { //Adding a node between 2 others
-                    fprintf(stdout, "INSERTION BETWEEN 2 NODES AT LEVEL %d\n", i);
+                    //fprintf(stdout, "INSERTION BETWEEN 2 NODES AT LEVEL %d\n", i);
                     lastTCB->NextTCB[i] = newElem;
                     lastTCB->NextTCB[i]->NextTCB[i] = currentTCB;
                     currentTCB = lastTCB;
@@ -654,7 +654,7 @@ void OS_SkipListInsert(OS_TCB *newElem)
         }
     }
     OS_CRITICAL_EXIT();
-    printSkipList();
+    //printSkipList();
 }
 
 /*
@@ -692,7 +692,7 @@ void OS_SkipListUpdate(void)
             p_tcb_next = p_tcb->NextTCB[0];         /* Point to next TCB to update                 */
             p_tcb->TickRemain = p_tcb->TickCtrMatch /* Compute time remaining of current TCB  USELESS?     */
                                 - OSTickCtr;
-           // fprintf(stdout, "%d %s %s\n", p_tcb->TickRemain, "REMAINS FOR TASK ", p_tcb->NamePtr);
+            //fprintf(stdout, "%d %s %s\n", p_tcb->TickRemain, "REMAINS FOR TASK ", p_tcb->NamePtr);
             if (OSTickCtr == p_tcb->TickCtrMatch)
             { /* Process each TCB that expires               */
                 p_tcb->TaskState = OS_TASK_STATE_RDY;
@@ -818,6 +818,8 @@ void addPeriodicTask(OS_TCB *task, OS_TICK period)
 
 void endTask(OS_TCB *task)
 {
+    //fprintf(stdout, "%s\n", "END OF TASK");
+
     OS_RdyListRemove(task);                          /* Remove current task from ready list                    */
     OSSched();
 }
