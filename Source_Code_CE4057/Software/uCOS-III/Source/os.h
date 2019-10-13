@@ -62,8 +62,6 @@ extern "C" {
 #include <lib_def.h>
 #include <os_type.h>
 #include <os_cpu.h>
-#include <time.h>
-#include <stdio.h>
 
 
 
@@ -184,6 +182,8 @@ extern "C" {
 ************************************************************************************************************************
 ************************************************************************************************************************
 */
+
+#define OS_TRACE 3u
 
 /*
 ========================================================================================================================
@@ -1178,6 +1178,7 @@ OS_EXT            OS_OBJ_QTY             OSTaskQty;                   /* Number 
 OS_EXT            OS_TICK                OSTickCtr;                   /* Counts the #ticks since startup or last set  */
 OS_EXT            OS_TCB                 OSTickTaskTCB;
 OS_EXT            CPU_TS                 OSTickTaskTimeMax;
+OS_EXT            CPU_TS                 LastTickISR;
 
 
 #if OS_CFG_TMR_EN > 0u                                                /* TIMERS ------------------------------------- */
@@ -2061,53 +2062,6 @@ void          OS_TickListResetPeak      (void);
 
 void          OS_TickListUpdate         (void);
 
-
-/* ------------------------------------------------PROJECT FUNCTIONS------------------------------------------------ */
-
-
-
-int           randomLevel               (void);
-
-void          OS_SkipListInsert         (OS_TCB *newElem);
-
-void          OS_SkipListRemove         (OS_TCB *oldElem);
-
-void          OS_SkipListInit           (void);
-
-void          OS_PeriodicTaskRdy        (OS_TCB *elem);
-
-void          OS_SkipListUpdate         (void);
-
-void          AppTaskSkipListHead       (void  *p_arg);
-
-void          addPeriodicTask           (OS_TCB *task, 
-                                         OS_TICK period);
-
-void          clearStack                (OS_TCB *task);
-
-void          printSkipList             (void);
-
-void          OSPeriodicTaskReset       (OS_TCB  *p_tcb);
-
-void  OSTaskPeriodicCreate (OS_TCB        *p_tcb,
-                    CPU_CHAR      *p_name,
-                    OS_TASK_PTR    p_task,
-                    void          *p_arg,
-                    OS_PRIO        prio,
-                    CPU_STK       *p_stk_base,
-                    CPU_STK_SIZE   stk_limit,
-                    CPU_STK_SIZE   stk_size,
-                    OS_MSG_QTY     q_size,
-                    OS_TICK        time_quanta,
-                    void          *p_ext,
-                    OS_OPT         opt,
-                    OS_ERR        *p_err);
-
-typedef struct skipListHead
-{
-    int n;
-    OS_TCB *firstTCB;
-}SkipListHead;
 
 /**************************************************************************************************************************/
 

@@ -209,7 +209,7 @@ OSTaskCreate((OS_TCB     *)&AppTaskTwoTCB,
                  (OS_ERR     *)&err);*/
 
   OSTaskPeriodicCreate((OS_TCB *)&AppTaskBlinkTCB,
-                       (CPU_CHAR *)"App Task Blink",
+                       (CPU_CHAR *)"App Task Blink ",
                        (OS_TASK_PTR)AppTaskBlink,
                        (void *)0,
                        (OS_PRIO)APP_TASK_BLINK_PRIO,
@@ -223,7 +223,7 @@ OSTaskCreate((OS_TCB     *)&AppTaskTwoTCB,
                        (OS_ERR *)&err);
 
   OSTaskPeriodicCreate((OS_TCB *)&AppTaskFWTCB,
-                       (CPU_CHAR *)"App Task Forward",
+                       (CPU_CHAR *)"App Task Forward ",
                        (OS_TASK_PTR)AppTaskFW,
                        (void *)0,
                        (OS_PRIO)APP_TASK_FW_PRIO,
@@ -237,7 +237,7 @@ OSTaskCreate((OS_TCB     *)&AppTaskTwoTCB,
                        (OS_ERR *)&err);
 
   OSTaskPeriodicCreate((OS_TCB *)&AppTaskBWTCB,
-                       (CPU_CHAR *)"App Task Backward",
+                       (CPU_CHAR *)"App Task Backward ",
                        (OS_TASK_PTR)AppTaskBW,
                        (void *)0,
                        (OS_PRIO)APP_TASK_BW_PRIO,
@@ -251,7 +251,7 @@ OSTaskCreate((OS_TCB     *)&AppTaskTwoTCB,
                        (OS_ERR *)&err);
 
   OSTaskPeriodicCreate((OS_TCB *)&AppTaskLeftTurnTCB,
-               (CPU_CHAR *)"App Task Left Turn",
+               (CPU_CHAR *)"App Task Left Turn ",
                (OS_TASK_PTR)AppTaskLeftTurn,
                (void *)0,
                (OS_PRIO)APP_TASK_LEFT_TURN_PRIO,
@@ -265,7 +265,7 @@ OSTaskCreate((OS_TCB     *)&AppTaskTwoTCB,
                (OS_ERR *)&err);
 
   OSTaskPeriodicCreate((OS_TCB *)&AppTaskRightTurnTCB,
-               (CPU_CHAR *)"App Task Right Turn",
+               (CPU_CHAR *)"App Task Right Turn ",
                (OS_TASK_PTR)AppTaskRightTurn,
                (void *)0,
                (OS_PRIO)APP_TASK_RIGHT_TURN_PRIO,
@@ -343,7 +343,9 @@ static void AppTaskTwo(void *p_arg)
 
 static void AppTaskBlink(void *p_arg)
 {
-  fprintf(stdout, "%s", "BLINK\n");
+  #if OS_TRACE > 0u
+    fprintf(stdout, "%s", "BLINK\n");
+  #endif
   CPU_INT32U i, k, j = 0;
 
   BSP_LED_Off(0u);
@@ -359,7 +361,9 @@ static void AppTaskBlink(void *p_arg)
 
 static void AppTaskFW(void *p_arg)
 {
-  fprintf(stdout, "%s", "FW\n");
+  #if OS_TRACE > 0u
+    fprintf(stdout, "%s", "FW\n");
+  #endif
   OS_ERR err;
   CPU_INT32U i;
 
@@ -374,7 +378,9 @@ static void AppTaskFW(void *p_arg)
 
 static void AppTaskBW(void *p_arg)
 {
-  fprintf(stdout, "%s", "BW\n");
+  #if OS_TRACE > 0u
+    fprintf(stdout, "%s", "BW\n");
+  #endif
   OS_ERR err;
   CPU_INT32U i;
 
@@ -389,7 +395,9 @@ static void AppTaskBW(void *p_arg)
 
 static void AppTaskLeftTurn(void *p_arg)
 {
-  fprintf(stdout, "%s", "LEFT TURN\n");
+  #if OS_TRACE > 0u
+    fprintf(stdout, "%s", "LEFT TURN\n");
+  #endif
   OS_ERR err;
   CPU_INT32U i;
   RoboTurn(LEFT_SIDE, 16, 50);
@@ -402,7 +410,9 @@ static void AppTaskLeftTurn(void *p_arg)
 
 static void AppTaskRightTurn(void *p_arg)
 {
-  fprintf(stdout, "%s", "RIGHT TURN\n");
+  #if OS_TRACE > 0u
+    fprintf(stdout, "%s", "RIGHT TURN\n");
+  #endif
   OS_ERR err;
   CPU_INT32U i;
   RoboTurn(RIGHT_SIDE, 16, 50);

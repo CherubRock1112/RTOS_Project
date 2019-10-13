@@ -1613,6 +1613,9 @@
                 <name>$PROJ_DIR$\..\..\..\..\..\uCOS-III\Ports\ARM-Cortex-M3\Generic\IAR\os_cpu.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\..\..\..\..\uCOS-III\Source\OS_RecTaskServices.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\..\..\..\..\uCOS-III\Source\os_type.h</name>
             </file>
         </group>
@@ -1656,6 +1659,9 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\..\..\uCOS-III\Source\os_q.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\..\..\uCOS-III\Source\OS_RecTaskServices.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\..\..\uCOS-III\Source\os_sem.c</name>
