@@ -416,6 +416,7 @@ void  OSMutexPend (OS_MUTEX   *p_mutex,
 
     OS_CRITICAL_ENTER_CPU_CRITICAL_EXIT();                  /* Lock the scheduler/re-enable interrupts                */
     p_tcb = p_mutex->OwnerTCBPtr;                           /* Point to the TCB of the Mutex owner                    */
+    //IMPLEMENT PCP
     if (p_tcb->Prio > OSTCBCurPtr->Prio) {                  /* See if mutex owner has a lower priority than current   */
         switch (p_tcb->TaskState) {
             case OS_TASK_STATE_RDY:
@@ -445,7 +446,7 @@ void  OSMutexPend (OS_MUTEX   *p_mutex,
                  return;
         }
     }
-
+    
     OS_Pend(&pend_data,                                     /* Block task pending on Mutex                            */
             (OS_PEND_OBJ *)((void *)p_mutex),
              OS_TASK_PEND_ON_MUTEX,
@@ -689,6 +690,8 @@ void  OSMutexPost (OS_MUTEX  *p_mutex,
         return;
     }
 
+    //A MODIF AVEC RBT
+    //If no TCB is waiting, OSMutexPost just decrement OwnerNestingCtr
     p_pend_list = &p_mutex->PendList;
     if (p_pend_list->NbrEntries == (OS_OBJ_QTY)0) {         /* Any task waiting on mutex?                             */
         p_mutex->OwnerTCBPtr     = (OS_TCB       *)0;       /* No                                                     */
@@ -705,7 +708,7 @@ void  OSMutexPost (OS_MUTEX  *p_mutex,
         OS_RdyListInsertTail(OSTCBCurPtr);                  /* Insert owner in ready list at new priority             */
         OSPrioCur         = OSTCBCurPtr->Prio;
     }
-                                                            /* Get TCB from head of pend list                         */
+                                                          /* Get TCB from head of pend list                         */
     p_tcb                      = p_pend_list->HeadPtr->TCBPtr;
     p_mutex->OwnerTCBPtr       = p_tcb;                     /* Give mutex to new owner                                */
     p_mutex->OwnerOriginalPrio = p_tcb->Prio;

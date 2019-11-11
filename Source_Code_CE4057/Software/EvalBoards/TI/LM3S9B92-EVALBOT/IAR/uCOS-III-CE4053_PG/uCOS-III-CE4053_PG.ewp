@@ -1753,6 +1753,9 @@
                 <name>$PROJ_DIR$\..\..\..\..\..\uCOS-III\Ports\ARM-Cortex-M3\Generic\IAR\os_cpu.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\..\..\..\..\uCOS-III\Source\OS_MutexPhase2.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\..\..\..\..\uCOS-III\Source\OS_RecTaskServices.h</name>
             </file>
             <file>
@@ -1790,6 +1793,9 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\..\..\uCOS-III\Source\os_mutex.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\..\..\..\..\uCOS-III\Source\OS_MutexPhase2.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\..\..\..\..\uCOS-III\Source\os_pend_multi.c</name>

@@ -1917,6 +1917,12 @@ void  OS_TaskInitTCB (OS_TCB *p_tcb)
     for(int i = 0; i < SKIP_LIST_MAX_LVL; i++)
         p_tcb->NextTCB[i] = NULL_TCB;
 
+    p_tcb->color = RED;
+    p_tcb->RBTChildren[0] = NULL_TCB;
+    p_tcb->RBTChildren[1] = NULL_TCB;
+    p_tcb->WaitingForMutex = NULL_MUTEX;
+    p_tcb->hasMutex = 0;
+
     p_tcb->TickNextPtr        = (OS_TCB        *)0;
     p_tcb->TickPrevPtr        = (OS_TCB        *)0;
     p_tcb->TickSpokePtr       = (OS_TICK_SPOKE *)0;

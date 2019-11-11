@@ -679,7 +679,10 @@ void  OSStart (OS_ERR  *p_err)
     }
 #endif
 
+
     if (OSRunning == OS_STATE_OS_STOPPED) {
+        OS_Stack_init();
+        OS_RBT_init();
         OSPrioHighRdy   = OS_PrioGetHighest();              /* Find the highest priority                              */
         OSPrioCur       = OSPrioHighRdy;
         OSTCBHighRdyPtr = OSRdyList[OSPrioHighRdy].HeadPtr;
@@ -853,13 +856,14 @@ void  OS_Pend (OS_PEND_DATA  *p_pend_data,
                  timeout);
 
     if (p_obj != (OS_PEND_OBJ *)0) {                         /* Add the current task to the pend list ...             */
-        p_pend_list             = &p_obj->PendList;          /* ... if there is an object to pend on                  */
-        p_pend_data->PendObjPtr = p_obj;                     /* Save the pointer to the object pending on             */
-        OS_PendDataInit((OS_TCB       *)OSTCBCurPtr,         /* Initialize the remaining field                        */
-                        (OS_PEND_DATA *)p_pend_data,
-                        (OS_OBJ_QTY    )1);
-        OS_PendListInsertPrio(p_pend_list,                   /* Insert in the pend list in priority order             */
-                              p_pend_data);
+        //p_pend_list             = &p_obj->PendList;          /* ... if there is an object to pend on                  */
+        //p_pend_data->PendObjPtr = p_obj;                     /* Save the pointer to the object pending on             */
+        //OS_PendDataInit((OS_TCB       *)OSTCBCurPtr,         /* Initialize the remaining field                        */
+        //                (OS_PEND_DATA *)p_pend_data,
+        //                (OS_OBJ_QTY    )1);
+        //OS_PendListInsertPrio(p_pend_list,                   /* Insert in the pend list in priority order             */
+        //                      p_pend_data);
+        //INSERT OF THE TASK IN RBT MADE PRIOR TO THE CALL OF OS_PEND
     } else {
         OSTCBCurPtr->PendDataTblEntries = (OS_OBJ_QTY    )0; /* If no object being pended on the clear these fields   */
         OSTCBCurPtr->PendDataTblPtr     = (OS_PEND_DATA *)0; /* ... in the TCB                                        */
@@ -1822,20 +1826,23 @@ void   OS_Post (OS_PEND_OBJ  *p_obj,
              break;
 
         case OS_TASK_STATE_PEND:
-        case OS_TASK_STATE_PEND_TIMEOUT:
-             if (p_tcb->PendOn == OS_TASK_PEND_ON_MULTI) {
+        case OS_TASK_STATE_PEND_TIMEOUT://MODIFY THIS
+             if (p_tcb->PendOn == OS_TASK_PEND_ON_MULTI) { //OSEF
                  OS_Post1(p_obj,                                 /* Indicate which object was posted to               */
                           p_tcb,
                           p_void,
                           msg_size,
                           ts);
-             } else {
+             } else 
+             {
 #if (OS_MSG_EN > 0u)
                  p_tcb->MsgPtr  = p_void;                        /* Deposit message in OS_TCB of task waiting         */
                  p_tcb->MsgSize = msg_size;                      /* ... assuming posting a message                    */
 #endif
                  p_tcb->TS      = ts;
              }
+
+             //REMOVE FROM RBT
              if (p_obj != (OS_PEND_OBJ *)0) {
                  OS_PendListRemove(p_tcb);                       /* Remove task from wait list(s)                     */
 #if OS_CFG_DBG_EN > 0u
@@ -1843,6 +1850,7 @@ void   OS_Post (OS_PEND_OBJ  *p_obj,
                                       p_tcb);
 #endif
              }
+             //READY TASK
              OS_TaskRdy(p_tcb);                                  /* Make task ready to run                            */
              p_tcb->TaskState  = OS_TASK_STATE_RDY;
              p_tcb->PendStatus = OS_STATUS_PEND_OK;              /* Clear pend status                                 */

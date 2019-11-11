@@ -71,6 +71,7 @@ build os_int.pbi : index os_int.xcl
 build os_mem.pbi : index os_mem.xcl
 build os_msg.pbi : index os_msg.xcl
 build os_mutex.pbi : index os_mutex.xcl
+build OS_MutexPhase2.pbi : index OS_MutexPhase2.xcl
 build os_pend_multi.pbi : index os_pend_multi.xcl
 build os_prio.pbi : index os_prio.xcl
 build os_q.pbi : index os_q.xcl
@@ -88,8 +89,8 @@ build uCOS-III-CE4053_PG_part2.pbi : link cpu_.pbi epi.pbi ethernet.pbi flash.pb
 build uCOS-III-CE4053_PG_part3.pbi : link interrupt.pbi mpu.pbi pwm.pbi qei.pbi ssi.pbi sysctl.pbi systick.pbi timer.pbi
 build uCOS-III-CE4053_PG_part4.pbi : link uart.pbi udma.pbi usb.pbi watchdog.pbi cpu_c.pbi cpu_core.pbi lib_ascii.pbi lib_math.pbi
 build uCOS-III-CE4053_PG_part5.pbi : link lib_mem.pbi lib_str.pbi os_cfg_app.pbi os_core.pbi os_cpu_c.pbi os_dbg.pbi os_flag.pbi os_int.pbi
-build uCOS-III-CE4053_PG_part6.pbi : link os_mem.pbi os_msg.pbi os_mutex.pbi os_pend_multi.pbi os_prio.pbi os_q.pbi OS_RecTaskServices.pbi os_sem.pbi
-build uCOS-III-CE4053_PG_part7.pbi : link os_stat.pbi os_task.pbi os_tick.pbi os_time.pbi os_tmr.pbi os_var.pbi
+build uCOS-III-CE4053_PG_part6.pbi : link os_mem.pbi os_msg.pbi os_mutex.pbi OS_MutexPhase2.pbi os_pend_multi.pbi os_prio.pbi os_q.pbi OS_RecTaskServices.pbi
+build uCOS-III-CE4053_PG_part7.pbi : link os_sem.pbi os_stat.pbi os_task.pbi os_tick.pbi os_time.pbi os_tmr.pbi os_var.pbi
 build uCOS-III-CE4053_PG.pbd : link uCOS-III-CE4053_PG_part0.pbi uCOS-III-CE4053_PG_part1.pbi uCOS-III-CE4053_PG_part2.pbi uCOS-III-CE4053_PG_part3.pbi uCOS-III-CE4053_PG_part4.pbi uCOS-III-CE4053_PG_part5.pbi uCOS-III-CE4053_PG_part6.pbi uCOS-III-CE4053_PG_part7.pbi
 build uCOS-III-CE4053_PG.pbw : browsedata uCOS-III-CE4053_PG.pbd
 

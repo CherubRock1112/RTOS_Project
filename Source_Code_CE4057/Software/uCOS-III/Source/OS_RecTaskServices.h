@@ -46,6 +46,7 @@ void          OSTaskPeriodicCreate      (OS_TCB        *p_tcb,
 
 
 void         stackReset                 (OS_TCB *p_tcb);     
+
 typedef struct skipListHead
 {
     OS_TCB *firstTCB;

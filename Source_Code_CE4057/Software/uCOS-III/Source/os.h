@@ -67,6 +67,7 @@ extern "C" {
 
 #define SKIP_LIST_MAX_LVL 4
 #define NULL_TCB (OS_TCB        *)0
+#define NULL_MUTEX (OS_MUTEX *) 0
 
 
 /*
@@ -183,7 +184,7 @@ extern "C" {
 ************************************************************************************************************************
 */
 
-#define OS_TRACE 3u
+#define OS_TRACE 0u
 
 /*
 ========================================================================================================================
@@ -825,19 +826,22 @@ struct  os_msg_q {                                          /* OS_MSG_Q         
 ------------------------------------------------------------------------------------------------------------------------
 */
 
-struct  os_mutex {
-    OS_OBJ_TYPE          Type;                              /* Mutual Exclusion Semaphore                             */
-    CPU_CHAR            *NamePtr;                           /* Should be set to OS_OBJ_TYPE_MUTEX                     */
-    OS_PEND_LIST         PendList;                          /* Pointer to Mutex Name (NUL terminated ASCII)           */
+struct  os_mutex {                                          /* Mutual Exclusion Semaphore                             */
+    OS_OBJ_TYPE          Type;                              /* Should be set to OS_OBJ_TYPE_MUTEX                     */
+    CPU_CHAR            *NamePtr;                           /* Pointer to Mutex Name (NUL terminated ASCII)           */
+    OS_PEND_LIST         PendList;                          /* List of tasks waiting on event flag group              */
 #if OS_CFG_DBG_EN > 0u
     OS_MUTEX            *DbgPrevPtr;
     OS_MUTEX            *DbgNextPtr;
     CPU_CHAR            *DbgNamePtr;
 #endif
-    OS_TCB              *OwnerTCBPtr;                       /* List of tasks waiting on event flag group              */
+    OS_TCB              *OwnerTCBPtr;                       
     OS_PRIO              OwnerOriginalPrio;
     OS_NESTING_CTR       OwnerNestingCtr;                   /* Mutex is available when the counter is 0               */
     CPU_TS               TS;
+    CPU_CHAR             TCBWaiting;
+    OS_PRIO              Ceiling;
+    struct os_mutex *stackNext;
 };
 
 /*$PAGE*/
@@ -886,6 +890,12 @@ struct  os_sem {
 ------------------------------------------------------------------------------------------------------------------------
 */
 
+enum nodeColor
+{
+    RED,
+    BLACK
+};
+
 struct os_tcb {
     CPU_STK             *StkPtr;                            /* Pointer to current top of stack                        */
 
@@ -899,6 +909,12 @@ struct os_tcb {
     OS_TCB              *PrevPtr;                           /* Pointer to previous TCB in the TCB list                */
 
     OS_TCB              *NextTCB[SKIP_LIST_MAX_LVL];
+    OS_PRIO             Period;
+
+    OS_TCB              *RBTChildren[2];
+    CPU_CHAR            color;
+    OS_MUTEX            *WaitingForMutex;
+    CPU_CHAR            hasMutex;
 
     OS_TCB              *TickNextPtr;
     OS_TCB              *TickPrevPtr;

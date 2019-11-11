@@ -60,14 +60,14 @@ void OS_SkipListInsert(OS_TCB *p_tcb)
     CPU_SR_ALLOC();
 
     OS_CRITICAL_ENTER();
-    p_tcb->TickCtrMatch = OSTickCtr + ((OS_TICK)p_tcb->Prio);
+    p_tcb->TickCtrMatch = OSTickCtr + ((OS_TICK)p_tcb->Period);
 
     if (head.firstTCB == NULL_TCB)
     { //First node
         //fprintf(stdout, "FIRST INSERTION\n");
         head.firstTCB = p_tcb;
     }
-    else if (p_tcb->Prio < head.firstTCB->TickRemain)
+    else if (p_tcb->Period < head.firstTCB->TickRemain)
     { //Node to be added is the smallest of the list
         //fprintf(stdout, "INSERTION AT HEAD (%d)\n", lvl);
         for (i = 0; i < SKIP_LIST_MAX_LVL; i++)
@@ -87,7 +87,7 @@ void OS_SkipListInsert(OS_TCB *p_tcb)
     {
         for (i = SKIP_LIST_MAX_LVL - 1; i >= 0; i--)
         {
-            while (currentTCB != NULL_TCB && p_tcb->Prio > currentTCB->TickRemain)
+            while (currentTCB != NULL_TCB && p_tcb->Period > currentTCB->TickRemain)
             {
                 lastTCB = currentTCB;
                 currentTCB = currentTCB->NextTCB[i];
@@ -332,7 +332,9 @@ void OS_PeriodicTaskRdy(OS_TCB *p_tcb)
 
 void addPeriodicTask(OS_TCB *p_tcb, OS_TICK period)
 {
-    p_tcb->Prio = (OS_PRIO)period;
+    period *= 10; //10Hz = Tick Rate
+    //p_tcb->Prio = (OS_PRIO) period;
+    p_tcb->Period = (OS_PRIO) period;
     CPU_CHAR *name = p_tcb->NamePtr;
     isNew = 1;
     OS_RdyListInsert(p_tcb);
@@ -413,11 +415,11 @@ void printSkipList(void)
     for (i = SKIP_LIST_MAX_LVL - 1; i >= 0; i--)
     {
         currentTCB = originalNode;
-        fprintf(stdout, "%s (%d) %d %s\n", currentTCB->NamePtr, i, currentTCB->TickRemain, " remaining");
+        //fprintf(stdout, "%s (%d) %d %s\n", currentTCB->NamePtr, i, currentTCB->TickRemain, " remaining");
         while (currentTCB->NextTCB[i] != NULL_TCB)
         {
             currentTCB = currentTCB->NextTCB[i];
-            fprintf(stdout, "%s (%d) %d %s\n", currentTCB->NamePtr, i, currentTCB->TickRemain, " remaining");
+            //fprintf(stdout, "%s (%d) %d %s\n", currentTCB->NamePtr, i, currentTCB->TickRemain, " remaining");
         }
     }
 }
@@ -557,7 +559,7 @@ void  OSTaskPeriodicCreate (OS_TCB        *p_tcb,
     p_tcb->NamePtr       = p_name;                          /* Save task name                                         */
 
     p_tcb->Prio          = prio;                            /* Save the task's priority                               */
-
+    fprintf(stdout, "%s %s %s %d\n", "Prio of ", p_tcb->NamePtr, " set to ", p_tcb->Prio);
     p_tcb->StkPtr        = p_sp;                            /* Save the new top-of-stack pointer                      */
     p_tcb->StkLimitPtr   = p_stk_limit;                     /* Save the stack limit pointer                           */
 
