@@ -856,13 +856,13 @@ void  OS_Pend (OS_PEND_DATA  *p_pend_data,
                  timeout);
 
     if (p_obj != (OS_PEND_OBJ *)0) {                         /* Add the current task to the pend list ...             */
-        //p_pend_list             = &p_obj->PendList;          /* ... if there is an object to pend on                  */
-        //p_pend_data->PendObjPtr = p_obj;                     /* Save the pointer to the object pending on             */
-        //OS_PendDataInit((OS_TCB       *)OSTCBCurPtr,         /* Initialize the remaining field                        */
-        //                (OS_PEND_DATA *)p_pend_data,
-        //                (OS_OBJ_QTY    )1);
-        //OS_PendListInsertPrio(p_pend_list,                   /* Insert in the pend list in priority order             */
-        //                      p_pend_data);
+        p_pend_list             = &p_obj->PendList;          /* ... if there is an object to pend on                  */
+        p_pend_data->PendObjPtr = p_obj;                     /* Save the pointer to the object pending on             */
+        OS_PendDataInit((OS_TCB       *)OSTCBCurPtr,         /* Initialize the remaining field                        */
+                        (OS_PEND_DATA *)p_pend_data,
+                        (OS_OBJ_QTY    )1);
+        OS_PendListInsertPrio(p_pend_list,                   /* Insert in the pend list in priority order             */
+                              p_pend_data);
         //INSERT OF THE TASK IN RBT MADE PRIOR TO THE CALL OF OS_PEND
     } else {
         OSTCBCurPtr->PendDataTblEntries = (OS_OBJ_QTY    )0; /* If no object being pended on the clear these fields   */
@@ -871,6 +871,9 @@ void  OS_Pend (OS_PEND_DATA  *p_pend_data,
 #if OS_CFG_DBG_EN > 0u
     OS_PendDbgNameAdd(p_obj,
                       OSTCBCurPtr);
+#endif
+#if SHOW_MUTEX_OVERHEAD > 2u
+    fprintf(stdout, "%s %s %s %d\n", "BLOCKING ", OSTCBCurPtr->NamePtr, " TOOK ", OS_TS_GET() - TSMutex);
 #endif
 }
 
@@ -1818,6 +1821,9 @@ void   OS_Post (OS_PEND_OBJ  *p_obj,
                 OS_MSG_SIZE   msg_size,
                 CPU_TS        ts)
 {
+#if SHOW_MUTEX_OVERHEAD > 0u
+    TSMutex = OS_TS_GET();    
+#endif
     switch (p_tcb->TaskState) {
         case OS_TASK_STATE_RDY:                                  /* Cannot Pend Abort a task that is ready            */
         case OS_TASK_STATE_DLY:                                  /* Cannot Pend Abort a task that is delayed          */
@@ -1842,7 +1848,6 @@ void   OS_Post (OS_PEND_OBJ  *p_obj,
                  p_tcb->TS      = ts;
              }
 
-             //REMOVE FROM RBT
              if (p_obj != (OS_PEND_OBJ *)0) {
                  OS_PendListRemove(p_tcb);                       /* Remove task from wait list(s)                     */
 #if OS_CFG_DBG_EN > 0u
@@ -1850,7 +1855,6 @@ void   OS_Post (OS_PEND_OBJ  *p_obj,
                                       p_tcb);
 #endif
              }
-             //READY TASK
              OS_TaskRdy(p_tcb);                                  /* Make task ready to run                            */
              p_tcb->TaskState  = OS_TASK_STATE_RDY;
              p_tcb->PendStatus = OS_STATUS_PEND_OK;              /* Clear pend status                                 */

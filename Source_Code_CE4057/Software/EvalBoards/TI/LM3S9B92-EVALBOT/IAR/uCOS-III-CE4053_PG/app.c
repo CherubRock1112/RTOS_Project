@@ -37,6 +37,8 @@
 
 #include "ext/SD_Card.h"
 
+#define PCP_MUTEX 1u
+
 /*
 *********************************************************************************************************
 *                                             LOCAL DEFINES
@@ -132,7 +134,7 @@ int  main (void)
 
     BSP_IntDisAll();                                            /* Disable all interrupts.                              */
     OSInit(&err);                                               /* Init uC/OS-III.                                      */
-
+    fprintf(stdout, "%s %d\n", "CPU CLOCK FREQUENCY IS ", BSP_CPUClkFreq());
     OSTaskCreate((OS_TCB     *)&AppTaskStartTCB,           /* Create the start task                                */
                  (CPU_CHAR   *)"App Task Start",
                  (OS_TASK_PTR ) AppTaskStart,
@@ -208,15 +210,15 @@ static  void  AppTaskStart (void  *p_arg)
     OSTaskPeriodicCreate((OS_TCB     *)&AppTaskTwoTCB,   (CPU_CHAR   *)"App Task Two",   (OS_TASK_PTR ) AppTaskTwo,   (void       *) 0, (OS_PRIO     ) APP_TASK_TWO_PRIO,   (CPU_STK    *)&AppTaskTwoStk[0],   (CPU_STK_SIZE) APP_TASK_TWO_STK_SIZE / 10u,   (CPU_STK_SIZE) APP_TASK_TWO_STK_SIZE,   (OS_MSG_QTY  ) 0u, (OS_TICK     ) 0u, (void       *)(CPU_INT32U) 2, (OS_OPT      )(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), (OS_ERR     *)&err);
     OSTaskPeriodicCreate((OS_TCB     *)&AppTaskThreeTCB, (CPU_CHAR   *)"App Task Three", (OS_TASK_PTR ) AppTaskThree, (void       *) 0, (OS_PRIO     ) APP_TASK_THREE_PRIO, (CPU_STK    *)&AppTaskThreeStk[0], (CPU_STK_SIZE) APP_TASK_THREE_STK_SIZE / 10u, (CPU_STK_SIZE) APP_TASK_THREE_STK_SIZE, (OS_MSG_QTY  ) 0u, (OS_TICK     ) 0u, (void       *)(CPU_INT32U) 3, (OS_OPT      )(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR), (OS_ERR     *)&err);
 
-    
+  #if PCP_MUTEX > 0u
     OSPCPMutexCreate((OS_MUTEX *)&MutexOne, (CPU_CHAR *) "Mutex One", (OS_ERR *)&err, (OS_TCB *) &AppTaskThreeTCB);
     OSPCPMutexCreate((OS_MUTEX *)&MutexTwo, (CPU_CHAR *) "Mutex Two", (OS_ERR *)&err, (OS_TCB *) &AppTaskOneTCB);
     OSPCPMutexCreate((OS_MUTEX *)&MutexThree, (CPU_CHAR *) "Mutex Three", (OS_ERR *)&err, (OS_TCB *) &AppTaskOneTCB);
-
-    // OSMutexCreate((OS_MUTEX *)&MutexOne, (CPU_CHAR *) "Mutex One", (OS_ERR *)&err);
-    // OSMutexCreate((OS_MUTEX *)&MutexTwo, (CPU_CHAR *) "Mutex Two", (OS_ERR *)&err);
-    // OSMutexCreate((OS_MUTEX *)&MutexThree, (CPU_CHAR *) "Mutex Three", (OS_ERR *)&err);
-  
+  #else
+    OSMutexCreate((OS_MUTEX *)&MutexOne, (CPU_CHAR *) "Mutex One", (OS_ERR *)&err);
+    OSMutexCreate((OS_MUTEX *)&MutexTwo, (CPU_CHAR *) "Mutex Two", (OS_ERR *)&err);
+    OSMutexCreate((OS_MUTEX *)&MutexThree, (CPU_CHAR *) "Mutex Three", (OS_ERR *)&err);
+  #endif
 
 
     /* Start!! */
@@ -240,11 +242,14 @@ static  void  AppTaskOne (void  *p_arg)
    
     OS_MSG_SIZE msg_size;
    
-     
+  #if PCP_MUTEX > 0u
     OSPCPMutexPend((OS_MUTEX *)&MutexTwo, (OS_TICK )0, (OS_OPT )OS_OPT_PEND_BLOCKING, (CPU_TS *)&ts, (OS_ERR *)&err);
     OSPCPMutexPend((OS_MUTEX *)&MutexThree, (OS_TICK )0, (OS_OPT )OS_OPT_PEND_BLOCKING, (CPU_TS *)&ts, (OS_ERR *)&err);
-    //OSMutexPend((OS_MUTEX *)&MutexTwo, (OS_TICK )0, (OS_OPT )OS_OPT_PEND_BLOCKING, (CPU_TS *)&ts, (OS_ERR *)&err);
-    //OSMutexPend((OS_MUTEX *)&MutexThree, (OS_TICK )0, (OS_OPT )OS_OPT_PEND_BLOCKING, (CPU_TS *)&ts, (OS_ERR *)&err);
+  #else
+    OSMutexPend((OS_MUTEX *)&MutexTwo, (OS_TICK )0, (OS_OPT )OS_OPT_PEND_BLOCKING, (CPU_TS *)&ts, (OS_ERR *)&err);
+    OSMutexPend((OS_MUTEX *)&MutexThree, (OS_TICK )0, (OS_OPT )OS_OPT_PEND_BLOCKING, (CPU_TS *)&ts, (OS_ERR *)&err);
+  #endif
+
     if(iMove > 0)
     {
       RoboTurn(FRONT, 14, 50);
@@ -261,12 +266,14 @@ static  void  AppTaskOne (void  *p_arg)
     BSP_MotorStop(LEFT_SIDE);
     BSP_MotorStop(RIGHT_SIDE);
 
-    
+  #if PCP_MUTEX > 0u
     OSPCPMutexPost((OS_MUTEX *)&MutexThree, (OS_OPT )OS_OPT_POST_NONE, (OS_ERR *)&err);
     OSPCPMutexPost((OS_MUTEX *)&MutexTwo, (OS_OPT )OS_OPT_POST_NONE, (OS_ERR *)&err);
-    //OSMutexPost((OS_MUTEX *)&MutexThree, (OS_OPT )OS_OPT_POST_NONE, (OS_ERR *)&err);
-    //OSMutexPost((OS_MUTEX *)&MutexTwo, (OS_OPT )OS_OPT_POST_NONE, (OS_ERR *)&err);
-       
+  #else
+    OSMutexPost((OS_MUTEX *)&MutexThree, (OS_OPT )OS_OPT_POST_NONE, (OS_ERR *)&err);
+    OSMutexPost((OS_MUTEX *)&MutexTwo, (OS_OPT )OS_OPT_POST_NONE, (OS_ERR *)&err);
+  #endif
+
     fprintf(stdout, "\n%s\n", "END OF T1");
     endTask(&AppTaskOneTCB);
 }
@@ -278,8 +285,12 @@ static  void  AppTaskTwo (void  *p_arg)
     CPU_INT32U  i, j=7;
     CPU_TS ts;
     
+  #if PCP_MUTEX > 0u
     OSPCPMutexPend((OS_MUTEX *)&MutexThree, (OS_TICK )0, (OS_OPT )OS_OPT_PEND_BLOCKING, (CPU_TS *)&ts, (OS_ERR *)&err);
-    //OSMutexPend((OS_MUTEX *)&MutexThree, (OS_TICK )0, (OS_OPT )OS_OPT_PEND_BLOCKING, (CPU_TS *)&ts, (OS_ERR *)&err);
+  #else
+    OSMutexPend((OS_MUTEX *)&MutexThree, (OS_TICK )0, (OS_OPT )OS_OPT_PEND_BLOCKING, (CPU_TS *)&ts, (OS_ERR *)&err);
+  #endif
+
     BSP_LED_On(1u);
     for(i=0; i <(WORKLOAD2*ONESECONDTICK); i++)
     {
@@ -288,17 +299,19 @@ static  void  AppTaskTwo (void  *p_arg)
     }
     BSP_LED_Off(1u);
     
-    
+  #if PCP_MUTEX > 0u
     OSPCPMutexPend((OS_MUTEX *)&MutexTwo, (OS_TICK )0, (OS_OPT )OS_OPT_PEND_BLOCKING, (CPU_TS *)&ts, (OS_ERR *)&err);
 
     OSPCPMutexPost((OS_MUTEX *)&MutexTwo, (OS_OPT ) OS_OPT_POST_NONE, (OS_ERR *)&err);
 
     OSPCPMutexPost((OS_MUTEX *)&MutexThree, (OS_OPT ) OS_OPT_POST_NONE, (OS_ERR *)&err);
-    //OSMutexPend((OS_MUTEX *)&MutexTwo, (OS_TICK )0, (OS_OPT )OS_OPT_PEND_BLOCKING, (CPU_TS *)&ts, (OS_ERR *)&err);
+  #else
+    OSMutexPend((OS_MUTEX *)&MutexTwo, (OS_TICK )0, (OS_OPT )OS_OPT_PEND_BLOCKING, (CPU_TS *)&ts, (OS_ERR *)&err);
 
-    //OSMutexPost((OS_MUTEX *)&MutexTwo, (OS_OPT ) OS_OPT_POST_NONE, (OS_ERR *)&err);
+    OSMutexPost((OS_MUTEX *)&MutexTwo, (OS_OPT ) OS_OPT_POST_NONE, (OS_ERR *)&err);
 
-    //OSMutexPost((OS_MUTEX *)&MutexThree, (OS_OPT ) OS_OPT_POST_NONE, (OS_ERR *)&err);
+    OSMutexPost((OS_MUTEX *)&MutexThree, (OS_OPT ) OS_OPT_POST_NONE, (OS_ERR *)&err);
+  #endif
 
     #if(MICROSD_EN == 1) 
     sprintf(g_cCmdBuf,"app log.txt  %d %d %d", j, iCounter++, (OSTimeGet(&err)/1000));

@@ -303,8 +303,8 @@ void stackReset(OS_TCB *p_tcb)
 void OS_PeriodicTaskRdy(OS_TCB *p_tcb)
 {
     CPU_CHAR *name = p_tcb->NamePtr;
-    #if OS_TRACE > 0u
-        fprintf(stdout, "%s %s %d\n", "RELEASE OF", p_tcb->NamePtr, OS_TS_GET() - LastTickISR);
+    #if SHOW_SCHEDULING_OVERHEAD > 0u
+        fprintf(stdout, "%s %s %s %d\n", "RELEASE OF", p_tcb->NamePtr, " IN THE READY LIST TOOK ", OS_TS_GET() - LastTickISR);
     #endif
     OS_RdyListInsert(p_tcb);
     p_tcb->NamePtr = name;

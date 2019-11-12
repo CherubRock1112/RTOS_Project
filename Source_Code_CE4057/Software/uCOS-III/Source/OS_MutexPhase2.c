@@ -21,8 +21,13 @@ void OS_RBTinsertion(OS_TCB *newElem, OS_MUTEX *mutex)
 {
     OS_TCB *stack[MAX_HEIGHT], *ptr, *newnode, *xPtr, *yPtr;
     int dir[MAX_HEIGHT], ht = 0, index;
-
+#if OS_TRACE_MUTEX > 1u
     fprintf(stdout, "%s %s %s %s\n", "Addition of ", newElem->NamePtr, " because of ", mutex->NamePtr);
+#endif
+
+#if SHOW_MUTEX_OVERHEAD > 1u
+    TSRBT = OS_TS_GET();
+#endif
     newElem->WaitingForMutex = mutex;
     ptr = RBTRoot;
     if (!RBTRoot)
@@ -189,7 +194,14 @@ void OS_RBTinsertion(OS_TCB *newElem, OS_MUTEX *mutex)
         }
     }
     RBTRoot->color = BLACK;
+
+#if SHOW_MUTEX_OVERHEAD > 1u
+    fprintf(stdout, "%s %s %s  %d\n", "ADDING ", newElem->NamePtr, " TOOK ", OS_TS_GET() - TSRBT);
+#endif
+
+#if OS_TRACE_MUTEX > 1u
     fprintf(stdout, "%s\n\n", "Addition performed");
+#endif
 }
 
 void OS_RBTdeletion(OS_TCB *oldElem)
@@ -198,8 +210,13 @@ void OS_RBTdeletion(OS_TCB *oldElem)
     OS_TCB *pPtr, *qPtr, *rPtr;
     int dir[MAX_HEIGHT], ht = 0, diff, i;
     enum nodeColor color;
-
+#if OS_TRACE_MUTEX > 1u
     fprintf(stdout, "%s %s\n", "Deletion of ", oldElem->NamePtr);
+#endif
+
+#if SHOW_MUTEX_OVERHEAD > 1u
+    TSRBT = OS_TS_GET();
+#endif
 
     oldElem->WaitingForMutex = NULL_MUTEX;
 
@@ -482,7 +499,14 @@ void OS_RBTdeletion(OS_TCB *oldElem)
             ht--;
         }
     }
+
+#if SHOW_MUTEX_OVERHEAD > 1u
+    fprintf(stdout, "%s %s %s  %d\n", "DELETING ", oldElem->NamePtr, " TOOK ", OS_TS_GET() - TSRBT);
+#endif
+
+#if OS_TRACE_MUTEX > 1u
     fprintf(stdout, "%s\n\n", "Deletion performed");
+#endif
 }
 
 int OS_RBTsearchTCB(OS_TCB *p_tcb)
@@ -563,8 +587,10 @@ void OS_StackPush(OS_MUTEX *p_mutex)
 {
     p_mutex->stackNext = StackTop;
     StackTop = p_mutex;
+#if OS_TRACE_MUTEX > 0u
     fprintf(stdout, "%d %s\n", StackTop->Ceiling, " has been added to the Stack");
     fprintf(stdout, "%s %d\n", "SysCeiling is now ", StackTop->Ceiling);
+#endif
 }
 
 void OS_StackPop()
@@ -574,8 +600,10 @@ void OS_StackPop()
         return;
     StackTop = StackTop->stackNext;
     temp->stackNext = NULL_MUTEX;
+#if OS_TRACE_MUTEX > 0u
     fprintf(stdout, "%d %s\n", temp->Ceiling, " has been removed from the Stack");
     fprintf(stdout, "%s %d\n", "SysCeiling is now ", StackTop->Ceiling);
+#endif
 }
 
 
@@ -663,6 +691,10 @@ void OSPCPMutexPend(OS_MUTEX *p_mutex,
     OS_TCB *p_tcb;
     CPU_SR_ALLOC();
 
+#if SHOW_MUTEX_OVERHEAD > 0u
+    TSMutex = OS_TS_GET();
+#endif
+
 #ifdef OS_SAFETY_CRITICAL
     if (p_err == (OS_ERR *)0)
     {
@@ -722,15 +754,21 @@ void OSPCPMutexPend(OS_MUTEX *p_mutex,
         {
             *p_ts = p_mutex->TS;
         }
-        
+#if OS_TRACE_MUTEX > 0u
         fprintf(stdout, "%s %s %s\n", p_mutex->OwnerTCBPtr->NamePtr, " has acquired ", p_mutex->NamePtr);
-
+#endif
         if (StackTop == NULL_MUTEX || StackTop->Ceiling >= p_mutex->Ceiling)
             OS_StackPush(p_mutex);
 
         CPU_CRITICAL_EXIT();
         *p_err = OS_ERR_NONE;
+
+        
+#if SHOW_MUTEX_OVERHEAD > 0u
+    fprintf(stdout, "%s %s %s %s %s %d\n", "ACQUIRING ", p_mutex->NamePtr, " WITH ", p_mutex->OwnerTCBPtr->NamePtr, " TOOK ", OS_TS_GET() - TSMutex);
+#endif
         fprintf(stdout, "\n");
+
         return;
     }
 
@@ -789,16 +827,7 @@ void OSPCPMutexPend(OS_MUTEX *p_mutex,
         }
     }
 
-    /*******************     OS_PEND EQUIVALENT    ****************/
-    // p_mutex->TCBWaiting++;
-    // fprintf(stdout, "%s %s %s\n", OSTCBCurPtr->NamePtr, " has been blocked by ", p_mutex->NamePtr);
-    // OS_RBTinsertion(OSTCBCurPtr, p_mutex);
-    // OSTCBCurPtr->PendOn = OS_TASK_PEND_ON_MUTEX; /* Resource not available, wait until it is              */
-    // OSTCBCurPtr->PendStatus = OS_STATUS_PEND_OK;
-    // OS_TaskBlock(OSTCBCurPtr, /* Block the task and add it to the tick list if needed  */
-    //              timeout);
     OS_PCPPend(OSTCBCurPtr, p_mutex, timeout);
-    /**************************************************************/
 
     OS_CRITICAL_EXIT_NO_SCHED();
 
@@ -860,10 +889,12 @@ void OSPCPMutexPost(OS_MUTEX *p_mutex,
                  OS_OPT opt,
                  OS_ERR *p_err)
 {
-    OS_PEND_LIST *p_pend_list;
     OS_TCB *p_tcb;
     CPU_TS ts;
     CPU_SR_ALLOC();
+#if SHOW_MUTEX_OVERHEAD > 0u
+    TSMutex = OS_TS_GET();    
+#endif
 
 #ifdef OS_SAFETY_CRITICAL
     if (p_err == (OS_ERR *)0)
@@ -915,23 +946,23 @@ void OSPCPMutexPost(OS_MUTEX *p_mutex,
         *p_err = OS_ERR_MUTEX_NESTING;
         return;
     }
-
-    //A MODIF AVEC RBT
-    //If no TCB is waiting, OSMutexPost just decrement OwnerNestingCtr
-    p_pend_list = &p_mutex->PendList;
-
     
     OSTCBCurPtr->hasMutex--;
 
     if (p_mutex->TCBWaiting == 0)
     {                                       /* Any task waiting on mutex?                             */
+#if OS_TRACE_MUTEX > 0u
         fprintf(stdout, "%s %s %s\n", p_mutex->NamePtr, " has been released (1) by ", p_mutex->OwnerTCBPtr->NamePtr);
+#endif
         p_mutex->OwnerTCBPtr = (OS_TCB *)0; /* No                                                     */
         p_mutex->OwnerNestingCtr = (OS_NESTING_CTR)0;
         OS_CRITICAL_EXIT();
         *p_err = OS_ERR_NONE;
         if(p_mutex->Ceiling == StackTop->Ceiling)
             OS_StackPop();
+#if SHOW_MUTEX_OVERHEAD > 0u
+        fprintf(stdout, "%s %s %s %d\n", "RELEASING ", p_mutex->NamePtr, " TOOK ", OS_TS_GET() - TSMutex);
+#endif
         fprintf(stdout, "\n");
         return;
     }
@@ -946,21 +977,8 @@ void OSPCPMutexPost(OS_MUTEX *p_mutex,
     }
 
     p_tcb = OS_ChangeOwner(p_mutex);
-
-    /***********OS_POST EQUIVALENT***************/
-
-// #if (OS_MSG_EN > 0u)
-//     p_tcb->MsgPtr = (void *)0;              /* Deposit message in OS_TCB of task waiting         */
-//     p_tcb->MsgSize = (OS_MSG_SIZE)0;        /* ... assuming posting a message                    */
-// #endif
-//     p_tcb->TS = ts;
-
-//     OS_RBTdeletion(p_tcb);
-//     OS_TaskRdy(p_tcb);                       /* Make task ready to run                            */
-//     p_tcb->TaskState = OS_TASK_STATE_RDY;
-//     p_tcb->PendStatus = OS_STATUS_PEND_OK;   /* Clear pend status                                 */
-//     p_tcb->PendOn = OS_TASK_PEND_ON_NOTHING; /* Indicate no longer pending                        */
     OS_PCPPost(p_tcb, ts);
+
     /********************************************/
 
     OS_CRITICAL_EXIT_NO_SCHED();
@@ -970,18 +988,23 @@ void OSPCPMutexPost(OS_MUTEX *p_mutex,
         OSSched(); /* Run the scheduler                                      */
     }
 
-    fprintf(stdout, "\n");
     *p_err = OS_ERR_NONE;
+#if SHOW_MUTEX_OVERHEAD > 0u
+    fprintf(stdout, "%s %s %s %s %s %d\n", "RELEASING", p_mutex->NamePtr, " TO ", p_mutex->OwnerTCBPtr->NamePtr, " TOOK ", OS_TS_GET() - TSMutex);
+#endif
+    fprintf(stdout, "\n");
 }
+
 
 OS_TCB * OS_ChangeOwner (OS_MUTEX *p_mutex)
 {
-    OS_TCB *p_tcb = NULL_TCB;
+    OS_TCB *p_tcb = OS_FindBlockedTask(p_mutex);
+#if OS_TRACE_MUTEX > 0u
     fprintf(stdout, "%s %s %s\n", p_mutex->NamePtr, " has been released (2) by ", p_mutex->OwnerTCBPtr->NamePtr);
-    p_tcb = OS_FindBlockedTask(p_mutex);
+    fprintf(stdout, "%s %s\n", p_tcb->NamePtr, " is the new TCB");
+#endif
     if(p_mutex->Ceiling == StackTop->Ceiling)
         OS_StackPop();
-    fprintf(stdout, "%s %s\n", p_tcb->NamePtr, " is the new TCB");
     p_mutex->OwnerTCBPtr = p_tcb; /* Give mutex to new owner                                */
     p_mutex->OwnerOriginalPrio = p_tcb->Prio;
     p_mutex->OwnerNestingCtr = (OS_NESTING_CTR)1;
@@ -989,20 +1012,31 @@ OS_TCB * OS_ChangeOwner (OS_MUTEX *p_mutex)
     p_tcb->hasMutex++;
     if (StackTop == NULL_MUTEX || StackTop->Ceiling >= p_mutex->Ceiling) //If no ceiling or ressource ceiling lower than the system ceiling
             OS_StackPush(p_mutex);
+
+#if OS_TRACE_MUTEX > 0u
     fprintf(stdout, "%s %s %s\n", p_mutex->OwnerTCBPtr->NamePtr, " has acquired ", p_mutex->NamePtr);
+#endif
     return p_tcb;
 }
+
 
 void OS_PCPPend(OS_TCB *p_tcb, OS_MUTEX *p_mutex, OS_TICK timeout)
 {
     p_mutex->TCBWaiting++;
+#if OS_TRACE_MUTEX > 0u
     fprintf(stdout, "%s %s %s\n", p_tcb->NamePtr, " has been blocked by ", p_mutex->NamePtr);
+#endif
     OS_RBTinsertion(p_tcb, p_mutex);
     p_tcb->PendOn = OS_TASK_PEND_ON_MUTEX; /* Resource not available, wait until it is              */
     p_tcb->PendStatus = OS_STATUS_PEND_OK;
     OS_TaskBlock(p_tcb, /* Block the task and add it to the tick list if needed  */
                  timeout);
+
+#if SHOW_MUTEX_OVERHEAD > 0u
+    fprintf(stdout, "%s %s %s %d\n", "BLOCKING ", p_tcb->NamePtr, " TOOK ", OS_TS_GET() - TSMutex);
+#endif
 }
+
 
 void OS_PCPPost(OS_TCB *p_tcb, CPU_TS ts)
 {

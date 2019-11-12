@@ -336,6 +336,9 @@ void  OSMutexPend (OS_MUTEX   *p_mutex,
     OS_TCB       *p_tcb;
     CPU_SR_ALLOC();
 
+#if SHOW_MUTEX_OVERHEAD > 0u
+    TSMutex = OS_TS_GET();
+#endif
 
 
 #ifdef OS_SAFETY_CRITICAL
@@ -389,6 +392,10 @@ void  OSMutexPend (OS_MUTEX   *p_mutex,
         }
         CPU_CRITICAL_EXIT();
         *p_err                     =  OS_ERR_NONE;
+        
+#if SHOW_MUTEX_OVERHEAD > 2u
+        fprintf(stdout, "%s %s %s %s %s %d\n", "ACQUIRING ", p_mutex->NamePtr, " WITH ", p_mutex->OwnerTCBPtr->NamePtr, " TOOK ", OS_TS_GET() - TSMutex);
+#endif
         return;
     }
 
@@ -642,6 +649,9 @@ void  OSMutexPost (OS_MUTEX  *p_mutex,
     OS_TCB        *p_tcb;
     CPU_TS         ts;
     CPU_SR_ALLOC();
+#if SHOW_MUTEX_OVERHEAD > 0u
+    TSMutex = OS_TS_GET();    
+#endif
 
 
 
@@ -698,6 +708,9 @@ void  OSMutexPost (OS_MUTEX  *p_mutex,
         p_mutex->OwnerNestingCtr = (OS_NESTING_CTR)0;
         OS_CRITICAL_EXIT();
         *p_err = OS_ERR_NONE;
+#if SHOW_MUTEX_OVERHEAD > 2u
+        fprintf(stdout, "%s %s %s %d\n", "RELEASING ", p_mutex->NamePtr, " TOOK ", OS_TS_GET() - TSMutex);
+#endif
         return;
     }
                                                             /* Yes                                                    */
@@ -727,6 +740,10 @@ void  OSMutexPost (OS_MUTEX  *p_mutex,
     }
 
     *p_err = OS_ERR_NONE;
+    
+#if SHOW_MUTEX_OVERHEAD > 2u
+    fprintf(stdout, "%s %s %s %s %s %d\n", "RELEASING", p_mutex->NamePtr, " TO ", p_mutex->OwnerTCBPtr->NamePtr, " TOOK ", OS_TS_GET() - TSMutex);
+#endif
 }
 
 /*$PAGE*/

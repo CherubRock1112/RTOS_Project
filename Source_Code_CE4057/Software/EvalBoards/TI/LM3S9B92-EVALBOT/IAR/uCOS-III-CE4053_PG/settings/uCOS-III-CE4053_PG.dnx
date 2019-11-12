@@ -5,7 +5,7 @@
         <LMIFTDIfoundProbes />
     </LMIFTDIDriver>
     <DebugChecksum>
-        <Checksum>1044008317</Checksum>
+        <Checksum>1708124063</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -28,12 +28,6 @@
     <Disassembly>
         <MixedMode>1</MixedMode>
     </Disassembly>
-    <CallStackLog>
-        <Enabled>0</Enabled>
-    </CallStackLog>
-    <CallStackStripe>
-        <ShowTiming>1</ShowTiming>
-    </CallStackStripe>
     <DisassembleMode>
         <mode>0</mode>
     </DisassembleMode>
@@ -50,8 +44,16 @@
         <Category>_ 0</Category>
     </LogFile>
     <Aliases>
-        <A0>_ "C:\Users\ankita003\Documents\CE4053\ce4053\Micrium\Software\uC-CPU\ARM-Cortex-M3\IAR\cpu_a.asm" ""</A0>
-        <Count>1</Count>
+        <A0>_ "C:\Users\ankita003\Documents\CE4053\ce4053\Micrium\Software\CPU\LuminaryMicro\DriverLib\driverlib\gpio.c" ""</A0>
+        <A1>_ "C:\Users\ankita003\Documents\CE4053\ce4053\Micrium\Software\CPU\LuminaryMicro\DriverLib\driverlib\pwm.c" ""</A1>
+        <A2>_ "C:\Users\ankita003\Documents\CE4053\ce4053\Micrium\Software\uC-CPU\ARM-Cortex-M3\IAR\cpu_a.asm" ""</A2>
+        <Count>3</Count>
         <SuppressDialog>0</SuppressDialog>
     </Aliases>
+    <CallStackLog>
+        <Enabled>0</Enabled>
+    </CallStackLog>
+    <CallStackStripe>
+        <ShowTiming>1</ShowTiming>
+    </CallStackStripe>
 </settings>

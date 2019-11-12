@@ -62,6 +62,7 @@ extern "C" {
 #include <lib_def.h>
 #include <os_type.h>
 #include <os_cpu.h>
+#include <stdio.h>
 
 
 
@@ -185,6 +186,10 @@ extern "C" {
 */
 
 #define OS_TRACE 0u
+#define SHOW_MUTEX_OVERHEAD 1u //3 for overhead in the original Mutex file
+#define SHOW_SCHEDULING_OVERHEAD 1u
+#define OS_TRACE_MUTEX 0u
+//0 for nothing, 1 for mutex acquiring/releasing logs, 2 for RBT logs
 
 /*
 ========================================================================================================================
@@ -1195,6 +1200,8 @@ OS_EXT            OS_TICK                OSTickCtr;                   /* Counts 
 OS_EXT            OS_TCB                 OSTickTaskTCB;
 OS_EXT            CPU_TS                 OSTickTaskTimeMax;
 OS_EXT            CPU_TS                 LastTickISR;
+OS_EXT            CPU_TS                 TSMutex;
+OS_EXT            CPU_TS                 TSRBT;
 
 
 #if OS_CFG_TMR_EN > 0u                                                /* TIMERS ------------------------------------- */
