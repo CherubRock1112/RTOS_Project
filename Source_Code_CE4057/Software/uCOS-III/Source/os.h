@@ -186,9 +186,9 @@ extern "C" {
 */
 
 #define OS_TRACE 0u
-#define SHOW_MUTEX_OVERHEAD 1u //3 for overhead in the original Mutex file
-#define SHOW_SCHEDULING_OVERHEAD 1u
-#define OS_TRACE_MUTEX 0u
+#define SHOW_MUTEX_OVERHEAD 0u //3 for overhead in the original Mutex file
+#define SHOW_SCHEDULING_OVERHEAD 0u
+#define OS_TRACE_MUTEX 1u
 //0 for nothing, 1 for mutex acquiring/releasing logs, 2 for RBT logs
 
 /*
@@ -920,6 +920,7 @@ struct os_tcb {
     CPU_CHAR            color;
     OS_MUTEX            *WaitingForMutex;
     CPU_CHAR            hasMutex;
+    OS_PRIO             originalPrio;
 
     OS_TCB              *TickNextPtr;
     OS_TCB              *TickPrevPtr;

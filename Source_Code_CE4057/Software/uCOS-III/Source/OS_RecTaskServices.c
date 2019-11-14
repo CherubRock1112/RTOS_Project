@@ -559,7 +559,7 @@ void  OSTaskPeriodicCreate (OS_TCB        *p_tcb,
     p_tcb->NamePtr       = p_name;                          /* Save task name                                         */
 
     p_tcb->Prio          = prio;                            /* Save the task's priority                               */
-    fprintf(stdout, "%s %s %s %d\n", "Prio of ", p_tcb->NamePtr, " set to ", p_tcb->Prio);
+    p_tcb->originalPrio  = prio;
     p_tcb->StkPtr        = p_sp;                            /* Save the new top-of-stack pointer                      */
     p_tcb->StkLimitPtr   = p_stk_limit;                     /* Save the stack limit pointer                           */
 

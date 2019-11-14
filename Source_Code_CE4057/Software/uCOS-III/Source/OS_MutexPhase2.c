@@ -546,12 +546,12 @@ void FindBlockedTask(OS_TCB *root, OS_MUTEX *p_mutex)
     if (root == NULL_TCB || blockedTask != NULL_TCB)
         return;
 
-    FindBlockedTask(root->RBTChildren[1], p_mutex);
+    FindBlockedTask(root->RBTChildren[0], p_mutex);
 
     if (root->WaitingForMutex == p_mutex && blockedTask == NULL_TCB)
         blockedTask = root;
 
-    FindBlockedTask(root->RBTChildren[0], p_mutex);
+    FindBlockedTask(root->RBTChildren[1], p_mutex);
 }
 
 void OS_RBTprint2D(void)
@@ -747,7 +747,7 @@ void OSPCPMutexPend(OS_MUTEX *p_mutex,
     (OSTCBCurPtr->hasMutex > 0 || StackTop == NULL_MUTEX || OSTCBCurPtr->Prio < StackTop->Ceiling))
     {                                       /* Resource available or task already owns mutexes or Prio of the task higher that system ceiling? */
         p_mutex->OwnerTCBPtr = OSTCBCurPtr; /* Yes, caller may proceed                                */
-        p_mutex->OwnerOriginalPrio = OSTCBCurPtr->Prio;
+        p_mutex->OwnerOriginalPrio = OSTCBCurPtr->originalPrio;
         p_mutex->OwnerNestingCtr = (OS_NESTING_CTR)1;
         OSTCBCurPtr->hasMutex++;
         if (p_ts != (CPU_TS *)0)
@@ -803,13 +803,19 @@ void OSPCPMutexPend(OS_MUTEX *p_mutex,
 
     OS_CRITICAL_ENTER_CPU_CRITICAL_EXIT(); /* Lock the scheduler/re-enable interrupts                */
     p_tcb = p_mutex->OwnerTCBPtr;          /* Point to the TCB of the Mutex owner                    */
+    if (p_tcb == NULL_TCB){
+        p_tcb = StackTop->OwnerTCBPtr;
+    }
     //IMPLEMENT PCP
-    if (p_tcb->Prio < OSTCBCurPtr->Prio)
-    { /* See if mutex owner has a higher priority than current   */
+    if (p_tcb->Prio > OSTCBCurPtr->Prio)
+    { /* See if mutex owner has a lower priority than current   */
         switch (p_tcb->TaskState)
         {
         case OS_TASK_STATE_RDY:
             OS_RdyListRemove(p_tcb);         /* Remove from ready list at current priority             */
+#if OS_TRACE_MUTEX > 0u
+            fprintf(stdout, "%s %s %s %d %s %d\n", "CHANGING THE PRIO OF ", p_tcb->NamePtr, " FROM ", p_tcb->Prio, " TO ", OSTCBCurPtr->Prio);
+#endif
             p_tcb->Prio = OSTCBCurPtr->Prio; /* Raise owner's priority                                 */
             OS_PrioInsert(p_tcb->Prio);
             OS_RdyListInsertHead(p_tcb); /* Insert in ready list at new priority                   */
@@ -818,6 +824,9 @@ void OSPCPMutexPend(OS_MUTEX *p_mutex,
         case OS_TASK_STATE_DLY:
         case OS_TASK_STATE_DLY_SUSPENDED:
         case OS_TASK_STATE_SUSPENDED:
+#if OS_TRACE_MUTEX > 0u
+            fprintf(stdout, "%s %s %s %d %s %d\n", "CHANGING THE PRIO OF ", p_tcb->NamePtr, " FROM ", p_tcb->Prio, " TO ", OSTCBCurPtr->Prio);
+#endif
             p_tcb->Prio = OSTCBCurPtr->Prio; /* Only need to raise the owner's priority                */
             break;
         default:
@@ -1003,8 +1012,14 @@ OS_TCB * OS_ChangeOwner (OS_MUTEX *p_mutex)
     fprintf(stdout, "%s %s %s\n", p_mutex->NamePtr, " has been released (2) by ", p_mutex->OwnerTCBPtr->NamePtr);
     fprintf(stdout, "%s %s\n", p_tcb->NamePtr, " is the new TCB");
 #endif
-    if(p_mutex->Ceiling == StackTop->Ceiling)
+    if(p_mutex->Ceiling == StackTop->Ceiling){
         OS_StackPop();
+        p_mutex->OwnerTCBPtr->Prio = p_mutex->OwnerOriginalPrio;
+#if OS_TRACE_MUTEX > 0u
+    fprintf(stdout, "%s %s %d\n", p_mutex->OwnerTCBPtr->NamePtr, "'s priority has return to ", p_mutex->OwnerTCBPtr->Prio);
+#endif
+    }
+
     p_mutex->OwnerTCBPtr = p_tcb; /* Give mutex to new owner                                */
     p_mutex->OwnerOriginalPrio = p_tcb->Prio;
     p_mutex->OwnerNestingCtr = (OS_NESTING_CTR)1;
